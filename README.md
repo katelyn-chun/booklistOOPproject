@@ -1,10 +1,12 @@
 # My Personal Project
 
-## A subtitle
+## Who, What, and Why?
 
-A *bulleted* list:
-- item 1
-- item 2
-- item 3
+My application will be a book tracker for the user to **add, review, link, and sort**
+books they have read. This project is designed for *anyone who is an active reader*.
+It may also be useful to students who would like to use it for keeping track
+of the online journal articles they have read, or textbooks to keep track of. I am interested in this
+project because I would like a simple application to record my reading history.
+Not only would it be helpful to look back on, but it would be fun to see my past ratings
+for the books.
 
-An example of text with **bold** and *italic* fonts.  
