@@ -19,7 +19,7 @@ public class BookApp {
     public void runBookApp() {
         bookList = new BookList();
         boolean done = false;
-        input = new Scanner(System.in);
+        input = new Scanner(System.in).useDelimiter("\n");
         String command;
 
         while (!done) {
@@ -33,6 +33,7 @@ public class BookApp {
                 doCommands(command);
             }
         }
+        input.close();
     }
 
     private void showMenu() {
@@ -123,7 +124,10 @@ public class BookApp {
             System.out.println("No books to view.");
         } else {
             for (Book b : bookList.getBookList()) {
-                System.out.println(b.showBook() + "\n----------------------------");
+                System.out.println("Title: " + b.getTitle() +  "\nAuthor: " + b.getAuthor()
+                        + "\nRead? " + b.getIsRead() + "\nRating: " + b.getRating() + "/5"
+                        + "\nStart Date: " + b.getStartDate() + "\nEnd Date: " + b.getEndDate()
+                        + "\n----------------------------");
             }
         }
     }

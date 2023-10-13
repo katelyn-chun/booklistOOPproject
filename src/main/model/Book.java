@@ -81,15 +81,6 @@ public class Book {
         isRead = read;
     }
 
-    // EFFECTS: displays all information about the book
-
-    public String showBook() {
-        String bookDisplay = "Title: " + title +  "\nAuthor: " + author
-                + "\nRead? " + isRead + "\nRating: " + rating + "/5"
-                + "\nStart Date: " + startDate + "\nEnd Date: " + endDate;
-        return bookDisplay;
-    }
-
     // EFFECTS: edits the start date of the book
 
     public void editStartDate(String newDate) {
