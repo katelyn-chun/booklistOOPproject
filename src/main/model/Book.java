@@ -84,14 +84,9 @@ public class Book {
     // EFFECTS: displays all information about the book
 
     public String showBook() {
-        String status;
-        if (isRead) {
-            status = "Yes";
-        } else {
-            status = "No";
-        }
+
         return "Title: " + title +  "\nAuthor: " + author
-                + "\nRead? " + status + "\nRating: " + rating + "/5"
+                + "\nRead? " + isRead + "\nRating: " + rating + "/5"
                 + "\nStart Date: " + startDate + "\nEnd Date: " + endDate;
     }
 
