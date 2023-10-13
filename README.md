@@ -13,6 +13,7 @@ for the books.
 ## User Stories
 - I want to be able to add a book to my book-list and record the start and end date
 - I want to be able to view my reading history
-- I want to be able to rate a book and sort it according to its genre
-- I want to be able to link a PDF or website to the corresponding book or article
+- I want to be able to rate a book
 - I want to mark a book as read or unread
+- I want to be able to link a PDF or website to the corresponding book or article
+- I want to sort a book according to its genre
