@@ -1,6 +1,8 @@
 package model;
 
 // Represents a book with a title, author, rating, and a status of read or unread
+// CITATION: Used Account as reference from the TellerApp example.
+
 public class Book {
     private String title;
     private String author;
@@ -9,8 +11,9 @@ public class Book {
     private String startDate;
     private String endDate;
 
-    // REQUIRES: a title and author with length greater than 0
-    // EFFECTS: sets the book's title and author, and its read or unread status
+    // REQUIRES: a title, author, and startDate with length greater than 0
+    // EFFECTS: sets the book's title and author, and its read or unread status, start date, and empty end date
+    //          sets the initial book rating to 0
     public Book(String title, String author, boolean read, String startDate) {
         this.title = title;
         this.author = author;
@@ -81,12 +84,14 @@ public class Book {
         isRead = read;
     }
 
+    // REQUIRES: a start date with length > 0
     // EFFECTS: edits the start date of the book
 
     public void editStartDate(String newDate) {
         startDate = newDate;
     }
 
+    // REQUIRES: an end date with length > 0
     // EFFECTS: edits the end date of the book
 
     public void editEndDate(String newDate) {

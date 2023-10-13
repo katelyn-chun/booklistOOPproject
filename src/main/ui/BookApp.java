@@ -6,15 +6,21 @@ import model.Book;
 import java.util.Scanner;
 
 // Bookkeeping application
+// CITATION: Used TellerApp as reference from the TellerApp example.
 
 public class BookApp {
 
     private Scanner input;
     private BookList bookList;
 
+    // EFFECTS: runs the book app
+
     public BookApp() {
         runBookApp();
     }
+
+    // MODIFIES: this
+    // EFFECTS: processes user's input
 
     public void runBookApp() {
         bookList = new BookList();
@@ -36,6 +42,8 @@ public class BookApp {
         input.close();
     }
 
+    // EFFECTS: displays options to user
+
     private void showMenu() {
         System.out.println("\nChoose a command:");
         System.out.println("\ta -> add a book");
@@ -46,6 +54,9 @@ public class BookApp {
         System.out.println("\te -> edit the start/end date of a book");
         System.out.println("\tx -> exit");
     }
+
+    // EFFECTS: processes user commands
+    // MODIFIES: this
 
     private void doCommands(String command) {
         switch (command) {
@@ -73,6 +84,9 @@ public class BookApp {
         }
     }
 
+    // EFFECTS: adds a new book to bookList
+    // MODIFIES: this
+
     private void addBook() {
         System.out.println("Enter the book title: ");
         String title = input.next();
@@ -91,13 +105,27 @@ public class BookApp {
         System.out.println("Enter the date you started the book: ");
         String date = input.next();
 
-        Book book = new Book(title, author, isFinished, date);
-        if (bookList.addBook(book)) {
-            System.out.println("Book added!");
+        if (checkLengthEqualsZero(title) || checkLengthEqualsZero(author) || checkLengthEqualsZero(date)) {
+            System.out.println("Add failed. Length must be greater than 0.");
         } else {
-            System.out.println("Add failed.");
+            Book book = new Book(title, author, isFinished, date);
+            bookList.addBook(book);
+            System.out.println("Book added!");
         }
     }
+
+    // EFFECTS: checks if the length of a string is 0
+
+    private boolean checkLengthEqualsZero(String str) {
+        if (str.length() == 0) {
+            System.out.println("Error, length must be greater than 0.");
+            return true;
+        }
+        return false;
+    }
+
+    // EFFECTS: removes an existing book from bookList
+    // MODIFIES: this
 
     private void deleteBook() {
         System.out.println("Enter the book title: ");
@@ -119,6 +147,8 @@ public class BookApp {
         }
     }
 
+    // EFFECTS: prints information of each book in bookList
+
     private void viewBooks() {
         if (bookList.getBookList().isEmpty()) {
             System.out.println("No books to view.");
@@ -132,24 +162,34 @@ public class BookApp {
         }
     }
 
+    // EFFECTS: takes in user input to mark a book to be read or unread
+    // MODIFIES: this
+
     private void markAsRead() {
         System.out.println("Enter the book title to select: ");
         String name = input.next();
         name = name.toLowerCase();
-        System.out.println("Do you want to mark it as read or unread? (r/u)");
-        String command = input.next();
-        switch (command) {
-            case "r":
-                setAsRead(name);
-                break;
-            case "u":
-                setAsUnread(name);
-                break;
-            default:
-                System.out.println("Invalid command; type 'r' or 'u'");
-                break;
+        boolean found = false;
+        for (Book b : bookList.getBookList()) {
+            if (b.getTitle().equals(name)) {
+                found = true;
+                System.out.println("Do you want to mark it as read or unread? (r/u)");
+                String command = input.next();
+                if (command.equals("r")) {
+                    setAsRead(name);
+                } else if (command.equals("u")) {
+                    setAsUnread(name);
+                } else {
+                    System.out.println("Invalid command; type 'r' or 'u'");
+                }
+            }
+        }
+        if (!found) {
+            System.out.println("Error, book not found.");
         }
     }
+    // EFFECTS: marks a book as read
+    // MODIFIES: this
 
     private void setAsRead(String name) {
         boolean found = false;
@@ -166,6 +206,9 @@ public class BookApp {
         }
     }
 
+    // EFFECTS: marks a book as unread
+    // MODIFIES: this
+
     private void setAsUnread(String name) {
         boolean found = false;
         for (Book b : bookList.getBookList()) {
@@ -180,6 +223,9 @@ public class BookApp {
             System.out.println(name + " is not in your book list.");
         }
     }
+
+    // EFFECTS: edits the book's rating
+    // MODIFIES: this
 
     private void editRating() {
         System.out.println("Enter the book you would like to rate: ");
@@ -201,6 +247,9 @@ public class BookApp {
             System.out.println("Rating failed; book not found.");
         }
     }
+
+    // EFFECTS: edits the book's start or end date
+    // MODIFIES: this
 
     private void editDates() {
         System.out.println("Enter the book you would like to edit: ");
