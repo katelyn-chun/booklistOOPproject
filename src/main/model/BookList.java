@@ -22,6 +22,7 @@ public class BookList {
 
     // EFFECTS: adds a book to list of books if it has not been added
     //          returns true if add was successful, false if unsuccessful
+    // MODIFIES: this
 
     public boolean addBook(Book book) {
         if (bookList.isEmpty()) {
@@ -39,6 +40,7 @@ public class BookList {
 
     // EFFECTS: removes a book from list of books if it exists
     //          returns true if remove was successful, false if unsuccessful
+    // MODIFIES: this
 
     public boolean removeBook(Book book) {
         for (Book b : bookList) {

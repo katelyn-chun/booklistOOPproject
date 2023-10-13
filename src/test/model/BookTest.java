@@ -36,6 +36,8 @@ class BookTest {
         assertEquals(5, book2.getRating());
         book1.editRating(0);
         assertEquals(0, book1.getRating());
+        book1.editRating(6);
+        assertEquals(0, book1.getRating());
     }
 
     @Test
