@@ -74,9 +74,14 @@ public class Book {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: edits the book's status to either read or unread
+
     public void editStatus(boolean read) {
         isRead = read;
     }
+
+    // EFFECTS: displays all information about the book
 
     public String showBook() {
         String status;
