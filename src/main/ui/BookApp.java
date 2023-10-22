@@ -171,7 +171,7 @@ public class BookApp {
         name = name.toLowerCase();
         boolean found = false;
         for (Book b : bookList.getBookList()) {
-            if (b.getTitle().equals(name)) {
+            if (b.getTitle().toLowerCase().equals(name)) {
                 found = true;
                 System.out.println("Do you want to mark it as read or unread? (r/u)");
                 String command = input.next();
