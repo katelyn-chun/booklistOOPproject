@@ -2,7 +2,11 @@ package ui;
 
 import model.BookList;
 import model.Book;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 // Bookkeeping application
@@ -12,10 +16,18 @@ public class BookApp {
 
     private Scanner input;
     private BookList bookList;
+    private static final String JSON_PATH = "./data/booklist.json";
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the book app
 
     public BookApp() {
+
+        bookList = new BookList("My Booklist");
+        input = new Scanner(System.in).useDelimiter("\n");
+        jsonWriter = new JsonWriter(JSON_PATH);
+        jsonReader = new JsonReader(JSON_PATH);
         runBookApp();
     }
 
@@ -23,9 +35,7 @@ public class BookApp {
     // EFFECTS: processes user's input
 
     public void runBookApp() {
-        bookList = new BookList();
         boolean done = false;
-        input = new Scanner(System.in).useDelimiter("\n");
         String command;
 
         while (!done) {
@@ -52,6 +62,9 @@ public class BookApp {
         System.out.println("\tm -> mark a book as read/unread");
         System.out.println("\tr -> rate a book out of 5");
         System.out.println("\te -> edit the start/end date of a book");
+        System.out.println("\tw -> link a website/PDF to a book");
+        System.out.println("\ts -> save book-list to file");
+        System.out.println("\tl - > load book-list from file");
         System.out.println("\tx -> exit");
     }
 
@@ -59,28 +72,24 @@ public class BookApp {
     // MODIFIES: this
 
     private void doCommands(String command) {
-        switch (command) {
-            case "a":
-                addBook();
-                break;
-            case "d":
-                deleteBook();
-                break;
-            case "v":
-                viewBooks();
-                break;
-            case "m":
-                markAsRead();
-                break;
-            case "r":
-                editRating();
-                break;
-            case "e":
-                editDates();
-                break;
-            default:
-                System.out.println("Invalid command.");
-                break;
+        if (command.equals("a")) {
+            addBook();
+        } else if (command.equals("d")) {
+            deleteBook();
+        } else if (command.equals("v")) {
+            viewBooks();
+        } else if (command.equals("m")) {
+            markAsRead();
+        } else if (command.equals("r")) {
+            editRating();
+        } else if (command.equals("e")) {
+            editDates();
+        } else if (command.equals("w")) {
+            addLink();
+        } else if (command.equals("s")) {
+            saveBookList();
+        } else if (command.equals("l")) {
+            loadBookList();
         }
     }
 
@@ -95,33 +104,17 @@ public class BookApp {
         System.out.println("Have you finished this book? (y/n)");
         String finished = input.next();
         finished = finished.toLowerCase();
-
         boolean isFinished = false;
-
         if (finished.equals("y")) {
             isFinished = true;
         }
-
         System.out.println("Enter the date you started the book: ");
         String date = input.next();
-
-        if (checkLengthEqualsZero(title) || checkLengthEqualsZero(author) || checkLengthEqualsZero(date)) {
-            System.out.println("Add failed. Length must be greater than 0.");
-        } else {
-            Book book = new Book(title, author, isFinished, date);
-            bookList.addBook(book);
-            System.out.println("Book added!");
-        }
-    }
-
-    // EFFECTS: checks if the length of a string is 0
-
-    private boolean checkLengthEqualsZero(String str) {
-        if (str.length() == 0) {
-            System.out.println("Error, length must be greater than 0.");
-            return true;
-        }
-        return false;
+        System.out.println("Enter the date you ended the book: (n/a if unfinished): ");
+        String endDate = input.next();
+        Book book = new Book(title, author, isFinished, date, endDate, 0, "---");
+        bookList.addBook(book);
+        System.out.println("Book added!");
     }
 
     // EFFECTS: removes an existing book from bookList
@@ -157,6 +150,7 @@ public class BookApp {
                 System.out.println("Title: " + b.getTitle() +  "\nAuthor: " + b.getAuthor()
                         + "\nRead? " + b.getIsRead() + "\nRating: " + b.getRating() + "/5"
                         + "\nStart Date: " + b.getStartDate() + "\nEnd Date: " + b.getEndDate()
+                        + "\nLink: " + b.getLink()
                         + "\n----------------------------");
             }
         }
@@ -275,6 +269,53 @@ public class BookApp {
             System.out.println("Edit complete.");
         } else {
             System.out.println("Edit failed; book not found.");
+        }
+    }
+
+    // EFFECTS: adds a link to a book
+    // MODIFIES: this
+
+    public void addLink() {
+        System.out.println("Enter the book you would like to link: ");
+        String name = input.next();
+        name = name.toLowerCase();
+        System.out.println("Enter the link: ");
+        String link = input.next();
+        boolean found = false;
+
+        for (Book b : bookList.getBookList()) {
+            if (b.getTitle().toLowerCase().equals(name)) {
+                b.addLink(link);
+                found = true;
+            }
+        }
+        if (found) {
+            System.out.println("Link successful.");
+        } else {
+            System.out.println("Link failed; book not found.");
+        }
+    }
+
+    // EFFECTS: saves book-list to file
+    private void saveBookList()  {
+        try {
+            jsonWriter.openWriter();
+            jsonWriter.write(bookList);
+            jsonWriter.closeWriter();
+            System.out.println("Saved " + bookList.getName() + " to " + JSON_PATH);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file " + JSON_PATH);
+
+        }
+    }
+
+    // EFFECTS: loads book-list from file
+    private void loadBookList() {
+        try {
+            bookList = jsonReader.read();
+            System.out.println("Loaded " + bookList.getName() + " from " + JSON_PATH);
+        } catch (IOException e) {
+            System.out.println("Cannot read from file: " + JSON_PATH);
         }
     }
 }

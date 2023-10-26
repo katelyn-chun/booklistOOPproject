@@ -13,9 +13,9 @@ class BookTest {
 
     @BeforeEach
     void doBefore() {
-        book1 = new Book("A Brief History of Time", "S. Hawking", true, "10/01/2023");
-        book2 = new Book("Atomic Habits", "J. Clear", false, "06/30/2022");
-        bookList = new BookList();
+        book1 = new Book("A Brief History of Time", "S. Hawking", true, "10/01/2023", "10/03/2023", 0, "---");
+        book2 = new Book("Atomic Habits", "J. Clear", false, "06/30/2022", "06/31/2022", 0, "");
+        bookList = new BookList("My Booklist");
     }
 
     @Test
@@ -109,5 +109,12 @@ class BookTest {
     void testRemoveBookFail() {
         bookList.addBook(book1);
         assertFalse(bookList.removeBook(book2));
+    }
+
+    @Test
+    void testAddLink() {
+        bookList.addBook(book1);
+        book1.addLink("www.pdf.ca");
+        assertEquals("www.pdf.ca", book1.getLink());
     }
 }

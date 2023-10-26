@@ -1,26 +1,31 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents a book with a title, author, rating, and a status of read or unread
 // CITATION: Used Account as reference from the TellerApp example.
 
-public class Book {
+public class Book implements Writable {
     private String title;
     private String author;
     private int rating;
     private boolean isRead;
     private String startDate;
     private String endDate;
+    private String link;
 
     // REQUIRES: a title, author, and startDate with length greater than 0
     // EFFECTS: sets the book's title and author, and its read or unread status, start date, and empty end date
     //          sets the initial book rating to 0
-    public Book(String title, String author, boolean read, String startDate) {
+    public Book(String title, String author, boolean read, String startDate, String endDate, int rating, String link) {
         this.title = title;
         this.author = author;
         this.isRead = read;
-        this.rating = 0;
+        this.rating = rating;
         this.startDate = startDate;
-        this.endDate = "-- / -- / --";
+        this.endDate = endDate;
+        this.link = link;
     }
 
     public String getTitle() {
@@ -45,6 +50,10 @@ public class Book {
 
     public String getEndDate() {
         return endDate;
+    }
+
+    public String getLink() {
+        return link;
     }
 
     // REQUIRES: an integer rating >= 0 and <= 5
@@ -86,6 +95,7 @@ public class Book {
 
     // REQUIRES: a start date with length > 0
     // EFFECTS: edits the start date of the book
+    // MODIFIES: this
 
     public void editStartDate(String newDate) {
         startDate = newDate;
@@ -93,8 +103,30 @@ public class Book {
 
     // REQUIRES: an end date with length > 0
     // EFFECTS: edits the end date of the book
+    // MODIFIES: this
 
     public void editEndDate(String newDate) {
         endDate = newDate;
+    }
+
+    // REQUIRES: a link as a string with length > 0
+    // EFFECTS: adds a link to a book
+    // MODIFIES: this
+
+    public void addLink(String linkString) {
+        link = linkString;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("title", title);
+        json.put("author", author);
+        json.put("rating", rating);
+        json.put("isRead", isRead);
+        json.put("startDate", startDate);
+        json.put("endDate", endDate);
+        json.put("link", link);
+        return json;
     }
 }
