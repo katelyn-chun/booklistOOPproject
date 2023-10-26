@@ -1,0 +1,23 @@
+{
+   "booklist": [
+      {
+         "endDate": "1/3/2022",
+         "author": "Hawking",
+         "rating": 5,
+         "isRead": true,
+         "link": "---",
+         "title": "A Brief History",
+         "startDate": "1/1/2022"
+      },
+      {
+         "endDate": "n/a",
+         "author": "Smith",
+         "rating": 4,
+         "isRead": true,
+         "link": "---",
+         "title": "7 Silly Eaters",
+         "startDate": "2/2/2009"
+      }
+   ],
+   "name": "My Booklist"
+}
