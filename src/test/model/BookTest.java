@@ -66,8 +66,9 @@ class BookTest {
     void testEditDates() {
         assertEquals("10/01/2023", book1.getStartDate());
         book1.editStartDate("10/05/2023");
+        book1.editEndDate("10/07/2023");
+        assertEquals("10/07/2023", book1.getEndDate());
         assertEquals("10/05/2023", book1.getStartDate());
-        assertEquals("-- / -- / --", book2.getEndDate());
         book2.editEndDate("07/07/2022");
         assertEquals("07/07/2022", book2.getEndDate());
     }
