@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import org.json.*;
 
 // Represents a reader that reads book-list from JSON data stored in file
-
+// Citation: Used JsonSerializationDemo as reference
 public class JsonReader {
     private String source;
 

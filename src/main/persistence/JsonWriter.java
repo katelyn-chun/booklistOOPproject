@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.io.*;
 
 // Represents a  writer that writes JSON representation of workroom to file
-
+// Citation: Used JsonSerializationDemo as reference
 public class JsonWriter {
     private PrintWriter writer;
     private String target;

@@ -9,6 +9,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Tests the Json Writer
+// Citation: Used JsonSerializationDemo as reference
 public class JsonWriterTest {
     @Test
     void testWriterBadFile() {

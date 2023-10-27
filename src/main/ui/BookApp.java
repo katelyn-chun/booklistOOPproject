@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 // Bookkeeping application
 // CITATION: Used TellerApp as reference from the TellerApp example.
-
+//           Used JsonSerializationDemo as reference
 public class BookApp {
 
     private Scanner input;

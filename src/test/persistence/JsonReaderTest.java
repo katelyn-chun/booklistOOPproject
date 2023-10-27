@@ -10,6 +10,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Tests the Json Reader
+// Citation: Used JsonSerializationDemo as reference
 public class JsonReaderTest {
     @Test
     void testReaderNoFile() {
