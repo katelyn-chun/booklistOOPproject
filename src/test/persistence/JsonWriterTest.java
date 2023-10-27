@@ -16,7 +16,7 @@ public class JsonWriterTest {
     void testWriterBadFile() {
         try {
             BookList bookList = new BookList("My booklist");
-            JsonWriter writer = new JsonWriter("./data/invalidFile");
+            JsonWriter writer = new JsonWriter("./data/invalidFile\0.json");
             writer.openWriter();
             fail("Exception was expected");
         } catch (IOException e) {
@@ -34,7 +34,7 @@ public class JsonWriterTest {
 
             JsonReader reader = new JsonReader("./data/testWriterEmptyBookList");
             bookList = reader.read();
-            assertEquals("My booklist", bookList.getName());
+            assertEquals("My Booklist", bookList.getName());
             assertEquals(0, bookList.getBookList().size());
         } catch (IOException e) {
             fail("Exception should not be thrown");
@@ -45,12 +45,12 @@ public class JsonWriterTest {
         try {
             BookList bookList = new BookList("My Booklist");
             bookList.addBook(new Book("A Brief History", "Hawking", true, "1/1/2022", "1/3/2022", 5, "---"));
-            bookList.addBook(new Book("7 Silly Eater", "Smith", true, "2/2/2009", "n/a", 4, "---"));
+            bookList.addBook(new Book("7 Silly Eaters", "Smith", true, "2/2/2009", "n/a", 4, "---"));
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralBookList");
             writer.openWriter();
             writer.write(bookList);
             writer.closeWriter();
-            JsonReader reader = new JsonReader("./testWriterGeneralBookList");
+            JsonReader reader = new JsonReader("./data/testWriterGeneralBookList");
             bookList = reader.read();
             assertEquals("My Booklist", bookList.getName());
             List<Book> books = bookList.getBookList();
