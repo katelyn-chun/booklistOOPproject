@@ -19,3 +19,5 @@ for the books.
 - I want to be able to remove a book from my book-list
 - I want to be able to save my book-list to file (if I choose)
 - I want to be able to load my book-list from file (if I choose)
+- I want to be able to add multiple books to a book list
+- I want to be prompted with the option to load data from file when the application starts and prompted with the option to save data to file when the application ends

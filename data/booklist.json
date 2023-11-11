@@ -1,4 +1,12 @@
 {
-   "booklist": [],
+   "booklist": [{
+      "endDate": "1",
+      "author": "a",
+      "rating": 5,
+      "isRead": true,
+      "link": "www.abc.ca",
+      "title": "a",
+      "startDate": "1"
+   }],
    "name": "My Booklist"
 }
