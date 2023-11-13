@@ -5,6 +5,7 @@ import model.BookList;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -34,16 +35,19 @@ public class GUI extends JPanel
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         listModel = new DefaultListModel();
-        listModel.addElement("<<Sample Book>>");
         list = new JList(listModel);
+        listModel.addElement("<<Sample Book>>");
+        bookList = new BookList("BookList");
+        Book sample = new Book("Sample Book", "John Smith", false, "1111", "2222", 5, "www.sample.com");
+        bookList.addBook(sample);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
         list.addListSelectionListener(this);
         list.setVisibleRowCount(5);
+        ListSelectionListener bookListListener = new BookListSelectionListener();
+        list.addListSelectionListener(bookListListener);
         JScrollPane listScroller = new JScrollPane(list);
         listScroller.setPreferredSize(new Dimension(500, 200));
 
-        bookList = new BookList("BookList");
         addButton = new JButton("Add Book");
         removeButton = new JButton("Remove Book");
         AddBookListener addListener = new AddBookListener(addButton);
@@ -110,6 +114,46 @@ public class GUI extends JPanel
 
         add(listScroller, BorderLayout.CENTER);
         add(textPane, BorderLayout.WEST);
+    }
+
+    public class BookListSelectionListener implements ListSelectionListener {
+
+        public void setOnAction() {
+            int index = list.getSelectedIndex();
+            JFrame frame = new JFrame("Book Details");
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            Book book = bookList.getBookList().get(index);
+
+            JLabel bookLabel = new JLabel("Title: " + book.getTitle());
+            JLabel bookLabel2 = new JLabel("Author: " + book.getAuthor());
+            JLabel bookLabel3 = new JLabel("Read? " + book.getIsRead());
+            JLabel bookLabel4 = new JLabel("Start date: " + book.getStartDate());
+            JLabel bookLabel5 = new JLabel("End date: " + book.getEndDate());
+            JLabel bookLabel6 = new JLabel("Rating out of 5: " + book.getRating());
+            JLabel bookLabel7 = new JLabel("Link: " + book.getLink());
+
+            panel.add(bookLabel);
+            panel.add(bookLabel2);
+            panel.add(bookLabel3);
+            panel.add(bookLabel4);
+            panel.add(bookLabel5);
+            panel.add(bookLabel6);
+            panel.add(bookLabel7);
+
+            frame.add(panel);
+            frame.setSize(400, 200);
+            frame.setVisible(true);
+        }
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+
+            if (e.getValueIsAdjusting()) {
+                setOnAction();
+            }
+        }
     }
 
     public class AddBookListener implements ActionListener, DocumentListener {
@@ -183,18 +227,8 @@ public class GUI extends JPanel
         @Override
         public void actionPerformed(ActionEvent e) {
             int index = list.getSelectedIndex();
-
+            bookList.removeBook(bookList.getBookList().get(index));
             listModel.remove(index);
-
-            if (listModel.getSize() == 0) {
-                removeButton.setEnabled(false);
-            } else {
-                if (index == listModel.getSize()) {
-                    index--;
-                }
-                list.setSelectedIndex(index);
-                list.ensureIndexIsVisible(index);
-            }
         }
     }
 
