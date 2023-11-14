@@ -5,7 +5,6 @@ import model.BookList;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -28,38 +27,60 @@ public class GUI extends JPanel
     private JTextField endDate;
     private JTextField link;
     private BookList bookList;
+    private AddBookListener addListener;
+    private RemoveBookListener removeListener;
 
     public GUI() throws
             UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         super(new BorderLayout());
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        listModel = new DefaultListModel();
-        list = new JList(listModel);
-        listModel.addElement("<<Sample Book>>");
-        bookList = new BookList("BookList");
-        Book sample = new Book("Sample Book", "John Smith", false, "1111", "2222", 5, "www.sample.com");
-        bookList.addBook(sample);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.addListSelectionListener(this);
-        list.setVisibleRowCount(5);
+        initializeListModelAndList();
+
         ListSelectionListener bookListListener = new BookListSelectionListener();
         list.addListSelectionListener(bookListListener);
         JScrollPane listScroller = new JScrollPane(list);
         listScroller.setPreferredSize(new Dimension(500, 200));
 
+        addListener = new AddBookListener(addButton);
+        removeListener = new RemoveBookListener();
+
+        createButtons();
+        createTextFields();
+        JPanel textPane = new JPanel();
+        textPane.setLayout(new BoxLayout(textPane, BoxLayout.PAGE_AXIS));
+
+        addLabelsAndTextFieldsToTextPane(textPane);
+        add(listScroller, BorderLayout.CENTER);
+        add(textPane, BorderLayout.WEST);
+    }
+
+    public void initializeListModelAndList() {
+        listModel = new DefaultListModel();
+        list = new JList(listModel);
+        bookList = new BookList("BookList");
+
+        listModel.addElement("<<Sample Book>>");
+        Book sample = new Book("Sample Book", "John Smith", false, "1111", "2222", 5, "www.sample.com");
+        bookList.addBook(sample);
+
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(this);
+        list.setVisibleRowCount(5);
+    }
+
+    public void createButtons() {
         addButton = new JButton("Add Book");
-        removeButton = new JButton("Remove Book");
-        AddBookListener addListener = new AddBookListener(addButton);
-        RemoveBookListener removeListener = new RemoveBookListener();
-
         addButton.setActionCommand("Add Book");
-        addButton.addActionListener(addListener);
         addButton.setEnabled(false);
+        addButton.addActionListener(addListener);
 
+        removeButton = new JButton("Remove Book");
         removeButton.setActionCommand("Remove Book");
         removeButton.addActionListener(removeListener);
+    }
 
+    public void createTextFields() {
         bookName = new JTextField(15);
         bookName.getDocument().addDocumentListener(addListener);
 
@@ -80,40 +101,31 @@ public class GUI extends JPanel
 
         link = new JTextField(5);
         link.getDocument().addDocumentListener(addListener);
+    }
 
-        JPanel textPane = new JPanel();
-        textPane.setLayout(new BoxLayout(textPane, BoxLayout.PAGE_AXIS));
-        JLabel label = new JLabel();
-        label.setText("Book name: ");
+    public void addLabelsAndTextFieldsToTextPane(JPanel textPane) {
+        JLabel label = new JLabel("Book name: ");
         textPane.add(label);
         textPane.add(bookName);
-        JLabel label2 = new JLabel();
-        label2.setText("Author: ");
+        JLabel label2 = new JLabel("Author: ");
         textPane.add(label2);
         textPane.add(bookAuthor);
         textPane.add(isRead);
-        JLabel label3 = new JLabel();
-        label3.setText("Start date: ");
+        JLabel label3 = new JLabel("Start date: ");
         textPane.add(label3);
         textPane.add(startDate);
-        JLabel label4 = new JLabel();
-        label4.setText("End date: ");
+        JLabel label4 = new JLabel("End date: ");
         textPane.add(label4);
         textPane.add(endDate);
-        JLabel label5 = new JLabel();
-        label5.setText("Rating out of 5: ");
+        JLabel label5 = new JLabel("Rating out of 5: ");
         textPane.add(label5);
         textPane.add(rating);
-        JLabel label6 = new JLabel();
-        label6.setText("Link: ");
+        JLabel label6 = new JLabel("Link: ");
         textPane.add(label6);
         textPane.add(link);
         textPane.add(addButton);
         textPane.add(removeButton);
         textPane.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-
-        add(listScroller, BorderLayout.CENTER);
-        add(textPane, BorderLayout.WEST);
     }
 
     public class BookListSelectionListener implements ListSelectionListener {
@@ -123,7 +135,7 @@ public class GUI extends JPanel
             JFrame frame = new JFrame("Book Details");
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+//            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             Book book = bookList.getBookList().get(index);
 
             JLabel bookLabel = new JLabel("Title: " + book.getTitle());
@@ -144,6 +156,7 @@ public class GUI extends JPanel
 
             frame.add(panel);
             frame.setSize(400, 200);
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         }
 
@@ -187,12 +200,13 @@ public class GUI extends JPanel
             link.setText("");
             list.setSelectedIndex(index);
             list.ensureIndexIsVisible(index);
+            displayAddedGraphic();
         }
 
         @Override
         public void insertUpdate(DocumentEvent e) {
             if (!alreadyEnabled) {
-                button.setEnabled(true);
+                addButton.setEnabled(true);
             }
         }
 
@@ -206,20 +220,40 @@ public class GUI extends JPanel
 
             if (!handleEmptyText(e)) {
                 if (!alreadyEnabled) {
-                    button.setEnabled(true);
+                    addButton.setEnabled(true);
                 }
             }
         }
 
         private boolean handleEmptyText(DocumentEvent e) {
             if (e.getDocument().getLength() <= 0) {
-                button.setEnabled(false);
+                addButton.setEnabled(false);
                 alreadyEnabled = false;
                 return true;
             }
             return false;
         }
 
+        public void displayAddedGraphic() {
+            ImageIcon icon = new ImageIcon("data/checkmark.png");
+            Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(img);
+            JLabel label = new JLabel(icon);
+            label.setVerticalAlignment(SwingConstants.TOP);
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setSize(100, 100);
+            JLabel labelString = new JLabel("Added!");
+            labelString.setVerticalAlignment(SwingConstants.BOTTOM);
+            labelString.setHorizontalAlignment(SwingConstants.CENTER);
+            JFrame frame = new JFrame();
+            frame.add(label);
+            frame.add(labelString);
+            frame.setPreferredSize(new Dimension(90, 110));
+            frame.setBackground(Color.LIGHT_GRAY);
+            frame.setLocationRelativeTo(list);
+            frame.pack();
+            frame.setVisible(true);
+        }
     }
 
     public class RemoveBookListener implements ActionListener {
