@@ -2,9 +2,13 @@ package ui;
 
 import model.Book;
 import model.BookList;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -18,6 +22,8 @@ public class GUI extends JPanel
     private DefaultListModel listModel;
     private JButton addButton;
     private JButton removeButton;
+    private JButton saveButton;
+    private JButton loadButton;
 
     private JTextField bookName;
     private JTextField bookAuthor;
@@ -27,14 +33,21 @@ public class GUI extends JPanel
     private JTextField endDate;
     private JTextField link;
     private BookList bookList;
-    private AddBookListener addListener;
-    private RemoveBookListener removeListener;
+    private final AddBookListener addListener;
+    private final RemoveBookListener removeListener;
+
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
+    private static final String JSON_PATH = "./data/booklist.json";
+
 
     public GUI() throws
             UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         super(new BorderLayout());
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
+        jsonWriter = new JsonWriter(JSON_PATH);
+        jsonReader = new JsonReader(JSON_PATH);
         initializeListModelAndList();
 
         ListSelectionListener bookListListener = new BookListSelectionListener();
@@ -42,7 +55,7 @@ public class GUI extends JPanel
         JScrollPane listScroller = new JScrollPane(list);
         listScroller.setPreferredSize(new Dimension(500, 200));
 
-        addListener = new AddBookListener(addButton);
+        addListener = new AddBookListener();
         removeListener = new RemoveBookListener();
 
         createButtons();
@@ -78,6 +91,16 @@ public class GUI extends JPanel
         removeButton = new JButton("Remove Book");
         removeButton.setActionCommand("Remove Book");
         removeButton.addActionListener(removeListener);
+
+        saveButton = new JButton("Save Booklist");
+        saveButton.setActionCommand("Save Booklist");
+        SaveListener saveListener = new SaveListener();
+        saveButton.addActionListener(saveListener);
+
+        loadButton = new JButton("Load Booklist");
+        loadButton.setActionCommand("Load Booklist");
+        LoadListener loadListener = new LoadListener();
+        loadButton.addActionListener(loadListener);
     }
 
     public void createTextFields() {
@@ -96,7 +119,7 @@ public class GUI extends JPanel
         endDate = new JTextField(10);
         endDate.getDocument().addDocumentListener(addListener);
 
-        rating = new JTextField(5);
+        rating = new JTextField("0", 5);
         rating.getDocument().addDocumentListener(addListener);
 
         link = new JTextField(5);
@@ -125,7 +148,8 @@ public class GUI extends JPanel
         textPane.add(link);
         textPane.add(addButton);
         textPane.add(removeButton);
-        textPane.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        textPane.add(saveButton);
+        textPane.add(loadButton);
     }
 
     public class BookListSelectionListener implements ListSelectionListener {
@@ -135,7 +159,6 @@ public class GUI extends JPanel
             JFrame frame = new JFrame("Book Details");
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             Book book = bookList.getBookList().get(index);
 
             JLabel bookLabel = new JLabel("Title: " + book.getTitle());
@@ -171,36 +194,11 @@ public class GUI extends JPanel
 
     public class AddBookListener implements ActionListener, DocumentListener {
 
-        private JButton button;
         private boolean alreadyEnabled = false;
-
-        public AddBookListener(JButton button) {
-            this.button = button;
-        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String name = bookName.getText();
-            int numberRating = Integer.parseInt(rating.getText());
-
-            Book b = new Book(name, bookAuthor.getText(), isRead.isSelected(), startDate.getText(),
-                    endDate.getText(), numberRating, link.getText());
-            bookList.addBook(b);
-
-            int index = list.getSelectedIndex();
-            listModel.addElement(name);
-
-            bookName.requestFocusInWindow();
-            bookName.setText("");
-            bookAuthor.setText("");
-            isRead.setSelected(false);
-            startDate.setText("");
-            endDate.setText("");
-            rating.setText("");
-            link.setText("");
-            list.setSelectedIndex(index);
-            list.ensureIndexIsVisible(index);
-            displayAddedGraphic();
+            addBookToBooklistAndDisplay();
         }
 
         @Override
@@ -232,6 +230,29 @@ public class GUI extends JPanel
                 return true;
             }
             return false;
+        }
+
+        public void addBookToBooklistAndDisplay() {
+            String name = bookName.getText();
+            int numberRating = Integer.parseInt(rating.getText());
+
+            Book b = new Book(name, bookAuthor.getText(), isRead.isSelected(), startDate.getText(),
+                    endDate.getText(), numberRating, link.getText());
+            bookList.addBook(b);
+
+            int index = list.getSelectedIndex();
+            listModel.addElement(name);
+
+            bookName.requestFocusInWindow();
+            bookName.setText("");
+            bookAuthor.setText("");
+            isRead.setSelected(false);
+            startDate.setText("");
+            endDate.setText("");
+            rating.setText("0");
+            link.setText("");
+            list.ensureIndexIsVisible(index);
+            displayAddedGraphic();
         }
 
         public void displayAddedGraphic() {
@@ -270,6 +291,37 @@ public class GUI extends JPanel
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
             removeButton.setEnabled(list.getSelectedIndex() != -1);
+        }
+    }
+
+    public class SaveListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                jsonWriter.openWriter();
+                jsonWriter.write(bookList);
+                jsonWriter.closeWriter();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    public class LoadListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                bookList = jsonReader.read();
+                listModel.removeAllElements();
+                for (Book b : bookList.getBookList()) {
+                    String name = b.getTitle();
+                    listModel.addElement(name);
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
