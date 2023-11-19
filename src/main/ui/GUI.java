@@ -14,7 +14,7 @@ import javax.swing.event.*;
 
 // A GUI for a bookkeeping app
 // Citation: Used ListDemo as reference from https://docs.oracle.com/javase/tutorial/uiswing/components/list.html
-
+// and https://stackoverflow.com/questions/6714045/how-to-resize-jlabel-imageicon for resizing an image
 public class GUI extends JPanel
         implements ListSelectionListener {
 
@@ -33,14 +33,15 @@ public class GUI extends JPanel
     private JTextField endDate;
     private JTextField link;
     private BookList bookList;
+
     private final AddBookListener addListener;
     private final RemoveBookListener removeListener;
-
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private static final String JSON_PATH = "./data/booklist.json";
 
-
+    // MODIFIES: this
+    // EFFECTS: sets up a list scroller containing the booklist and panel to add books
     public GUI() throws
             UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         super(new BorderLayout());
@@ -68,12 +69,14 @@ public class GUI extends JPanel
         add(textPane, BorderLayout.WEST);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes DefaultListModel and JList, adds a sample book
     public void initializeListModelAndList() {
         listModel = new DefaultListModel();
         list = new JList(listModel);
         bookList = new BookList("BookList");
 
-        listModel.addElement("<<Sample Book>>");
+        listModel.addElement("Sample Book");
         Book sample = new Book("Sample Book", "John Smith", false, "1111", "2222", 5, "www.sample.com");
         bookList.addBook(sample);
 
@@ -82,6 +85,9 @@ public class GUI extends JPanel
         list.setVisibleRowCount(5);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes 'Add', 'Remove', 'Save', and 'Load' buttons
+    // adds listeners to each button
     public void createButtons() {
         addButton = new JButton("Add Book");
         addButton.setActionCommand("Add Book");
@@ -103,29 +109,21 @@ public class GUI extends JPanel
         loadButton.addActionListener(loadListener);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes all text fields and adds a listener to bookName
     public void createTextFields() {
         bookName = new JTextField(15);
         bookName.getDocument().addDocumentListener(addListener);
-
         bookAuthor = new JTextField(15);
-        bookAuthor.getDocument().addDocumentListener(addListener);
-
         isRead = new JCheckBox("Read?");
         isRead.setSelected(false);
-
         startDate = new JTextField(10);
-        startDate.getDocument().addDocumentListener(addListener);
-
         endDate = new JTextField(10);
-        endDate.getDocument().addDocumentListener(addListener);
-
         rating = new JTextField("0", 5);
-        rating.getDocument().addDocumentListener(addListener);
-
         link = new JTextField(5);
-        link.getDocument().addDocumentListener(addListener);
     }
 
+    // EFFECTS: adds the labels and text fields to JPanel for creating a book
     public void addLabelsAndTextFieldsToTextPane(JPanel textPane) {
         JLabel label = new JLabel("Book name: ");
         textPane.add(label);
@@ -152,6 +150,7 @@ public class GUI extends JPanel
         textPane.add(loadButton);
     }
 
+    // A listener for when the user selects a book
     public class BookListSelectionListener implements ListSelectionListener {
 
         public void setOnAction() {
@@ -183,6 +182,7 @@ public class GUI extends JPanel
             frame.setVisible(true);
         }
 
+        // EFFECTS: Opens the book when selected
         @Override
         public void valueChanged(ListSelectionEvent e) {
 
@@ -192,15 +192,19 @@ public class GUI extends JPanel
         }
     }
 
+    // A listener for when the user adds a book
     public class AddBookListener implements ActionListener, DocumentListener {
 
         private boolean alreadyEnabled = false;
 
+        // EFFECTS: Calls addBookToBooklistAndDisplay() when button is pressed
         @Override
         public void actionPerformed(ActionEvent e) {
             addBookToBooklistAndDisplay();
         }
 
+        // EFFECTS: Enables the button when user enters a title
+        // MODIFIES: this
         @Override
         public void insertUpdate(DocumentEvent e) {
             if (!alreadyEnabled) {
@@ -208,11 +212,14 @@ public class GUI extends JPanel
             }
         }
 
+        // EFFECTS: Calls handleEmptyText() when user removes something from document
         @Override
         public void removeUpdate(DocumentEvent e) {
             handleEmptyText(e);
         }
 
+        // EFFECTS: Enables the button if document is not empty and not already enabled
+        // MODIFIES: this
         @Override
         public void changedUpdate(DocumentEvent e) {
 
@@ -223,6 +230,8 @@ public class GUI extends JPanel
             }
         }
 
+        // EFFECTS: Disables button if document length is <= 0 and returns true, otherwise returns false
+        // MODIFIES: this
         private boolean handleEmptyText(DocumentEvent e) {
             if (e.getDocument().getLength() <= 0) {
                 addButton.setEnabled(false);
@@ -232,6 +241,8 @@ public class GUI extends JPanel
             return false;
         }
 
+        // EFFECTS: Adds book attributes to Booklist, and displays the title in the listModel
+        // MODIFIES: this
         public void addBookToBooklistAndDisplay() {
             String name = bookName.getText();
             int numberRating = Integer.parseInt(rating.getText());
@@ -255,6 +266,7 @@ public class GUI extends JPanel
             displayAddedGraphic();
         }
 
+        // EFFECTS: Displays the checkmark image after book is added
         public void displayAddedGraphic() {
             ImageIcon icon = new ImageIcon("data/checkmark.png");
             Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
@@ -277,8 +289,11 @@ public class GUI extends JPanel
         }
     }
 
+    // A listener for when user removes a book
     public class RemoveBookListener implements ActionListener {
 
+        // EFFECTS: Removes book from booklist and from listModel
+        // MODIFIES: this
         @Override
         public void actionPerformed(ActionEvent e) {
             int index = list.getSelectedIndex();
@@ -287,6 +302,8 @@ public class GUI extends JPanel
         }
     }
 
+    // EFFECTS: Enables the removeButton if no changes are being made and if a book is selected
+    // MODIFIES: this
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
@@ -294,8 +311,10 @@ public class GUI extends JPanel
         }
     }
 
+    // A listener for when the user wants to save the booklist
     public class SaveListener implements ActionListener {
 
+        // EFFECTS: saves booklist to file
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -308,8 +327,11 @@ public class GUI extends JPanel
         }
     }
 
+    // A listener for when the user wants to load the previous booklist
     public class LoadListener implements ActionListener {
 
+        // EFFECTS: Loads the booklist from file and displays the previous books
+        // MODIFIES: this
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -325,6 +347,7 @@ public class GUI extends JPanel
         }
     }
 
+    // EFFECTS: Displays GUI
     private static void showGUI() throws
             UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         JFrame frame = new JFrame("BookList");
@@ -338,6 +361,7 @@ public class GUI extends JPanel
         frame.setVisible(true);
     }
 
+    // EFFECTS: Runs GUI
     public static void main(String[] args) throws
             UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         showGUI();

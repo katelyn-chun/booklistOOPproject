@@ -3,20 +3,20 @@
       {
          "endDate": "",
          "author": "",
-         "rating": 5,
+         "rating": 0,
          "isRead": true,
          "link": "",
-         "title": "Anne of GReen Gables",
+         "title": "Wwwwwwwwwwwwwuuuuuuuuuuuuuuuuuuuuuuu",
          "startDate": ""
       },
       {
-         "endDate": "10/11",
-         "author": "Yayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
-         "rating": 4,
+         "endDate": "",
+         "author": "",
+         "rating": 5,
          "isRead": true,
          "link": "",
-         "title": "Erkkkkk",
-         "startDate": "10/10"
+         "title": "Yayyyyyyyyyyyyyyyyyyyyyyyyyy",
+         "startDate": ""
       }
    ],
    "name": "BookList"
