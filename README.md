@@ -24,7 +24,7 @@ for the books.
 
 # Instructions for Grader
 - You can generate the first required action related to the user story "adding multiple Xs to a Y" by pressing "Add Book" after entering a book title and other book attributes
-- You can generate the second required action related to the user story "adding multiple Xs to a Y" by selecting a book in the list and viewing its details
+- You can generate the second required action related to the user story "adding multiple Xs to a Y" by selecting a book in the list and pressing "Remove Book" to delete a book
 - You can locate my visual component by adding a book, which displays an image
 - You can save the state of my application by pressing "Save Booklist"
 - You can reload the state of my application by pressing "Load Booklist"

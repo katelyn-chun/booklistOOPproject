@@ -17,6 +17,24 @@
          "link": "",
          "title": "Yayyyyyyyyyyyyyyyyyyyyyyyyyy",
          "startDate": ""
+      },
+      {
+         "endDate": "12/12",
+         "author": "Goodbyeeeeeeeeeeee",
+         "rating": 4,
+         "isRead": true,
+         "link": "www.bbb.ca",
+         "title": "Hellooooooooooo",
+         "startDate": "10/12"
+      },
+      {
+         "endDate": "",
+         "author": "yuuuuuuuuuuuuuuuuuu",
+         "rating": 1,
+         "isRead": false,
+         "link": "",
+         "title": "heeyyyyyyyy",
+         "startDate": ""
       }
    ],
    "name": "BookList"
