@@ -28,3 +28,7 @@ for the books.
 - You can locate my visual component by adding a book, which displays an image
 - You can save the state of my application by pressing "Save Booklist"
 - You can reload the state of my application by pressing "Load Booklist"
+
+# Phase 4: Task 2
+- Add a book by adding (at least) a book title
+- Remove a book by selecting one in the list
