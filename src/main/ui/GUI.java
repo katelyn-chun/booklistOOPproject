@@ -2,6 +2,8 @@ package ui;
 
 import model.Book;
 import model.BookList;
+import model.Event;
+import model.EventLog;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -9,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -36,6 +39,7 @@ public class GUI extends JPanel
 
     private final AddBookListener addListener;
     private final RemoveBookListener removeListener;
+    private static WindowListener windowListener;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private static final String JSON_PATH = "./data/booklist.json";
@@ -150,8 +154,54 @@ public class GUI extends JPanel
         textPane.add(loadButton);
     }
 
+    // EFFECTS: adds a window listener to print event log
+    public static void makeWindowListener() {
+         windowListener = new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                printLog();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        };
+
+    }
+
+    private static void printLog() {
+        for (Iterator<Event> it = EventLog.getInstance().iterator(); it.hasNext(); ) {
+            Event e = it.next();
+            System.out.println(e.toString());
+        }
+    }
+
     // A listener for when the user selects a book
-    public class BookListSelectionListener implements ListSelectionListener {
+    private class BookListSelectionListener implements ListSelectionListener {
 
         public void setOnAction() {
             int index = list.getSelectedIndex();
@@ -193,7 +243,7 @@ public class GUI extends JPanel
     }
 
     // A listener for when the user adds a book
-    public class AddBookListener implements ActionListener, DocumentListener {
+    private class AddBookListener implements ActionListener, DocumentListener {
 
         private boolean alreadyEnabled = false;
 
@@ -290,7 +340,7 @@ public class GUI extends JPanel
     }
 
     // A listener for when user removes a book
-    public class RemoveBookListener implements ActionListener {
+    private class RemoveBookListener implements ActionListener {
 
         // EFFECTS: Removes book from booklist and from listModel
         // MODIFIES: this
@@ -312,7 +362,7 @@ public class GUI extends JPanel
     }
 
     // A listener for when the user wants to save the booklist
-    public class SaveListener implements ActionListener {
+    private class SaveListener implements ActionListener {
 
         // EFFECTS: saves booklist to file
         @Override
@@ -328,7 +378,7 @@ public class GUI extends JPanel
     }
 
     // A listener for when the user wants to load the previous booklist
-    public class LoadListener implements ActionListener {
+    private class LoadListener implements ActionListener {
 
         // EFFECTS: Loads the booklist from file and displays the previous books
         // MODIFIES: this
@@ -357,6 +407,8 @@ public class GUI extends JPanel
         pane.setOpaque(true);
         frame.setContentPane(pane);
 
+        makeWindowListener();
+        frame.addWindowListener(windowListener);
         frame.pack();
         frame.setVisible(true);
     }

@@ -42,6 +42,7 @@ public class BookList implements Writable {
             }
             bookList.add(book);
         }
+        EventLog.getInstance().logEvent(new Event("Added book: " + book.getTitle()));
         return true;
     }
 
@@ -52,6 +53,7 @@ public class BookList implements Writable {
         for (Book b : bookList) {
             if (b == book) {
                 bookList.remove(book);
+                EventLog.getInstance().logEvent(new Event("Removed book: " + book.getTitle()));
                 return true;
             }
         }
