@@ -155,9 +155,9 @@ public class GUI extends JPanel
     }
 
     // EFFECTS: adds a window listener to print event log
+    // MODIFIES: this
     public static void makeWindowListener() {
-         windowListener = new WindowListener() {
-            @Override
+        windowListener = new WindowListener() {
             public void windowOpened(WindowEvent e) {
 
             }
@@ -190,7 +190,6 @@ public class GUI extends JPanel
 
             }
         };
-
     }
 
     private static void printLog() {
