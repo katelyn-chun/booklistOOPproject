@@ -20,6 +20,7 @@ public class BookList implements Writable {
 
     // EFFECTS: returns list of books
     public List<Book> getBookList() {
+        EventLog.getInstance().logEvent(new Event("Viewed a book"));
         return bookList;
     }
 

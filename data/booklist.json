@@ -1,23 +1,12 @@
 {
-   "booklist": [
-      {
-         "endDate": "",
-         "author": "",
-         "rating": 0,
-         "isRead": false,
-         "link": "",
-         "title": "Yoooooooo",
-         "startDate": ""
-      },
-      {
-         "endDate": "",
-         "author": "xD",
-         "rating": 0,
-         "isRead": false,
-         "link": "",
-         "title": "Hehe",
-         "startDate": ""
-      }
-   ],
+   "booklist": [{
+      "endDate": "",
+      "author": "",
+      "rating": 0,
+      "isRead": false,
+      "link": "",
+      "title": "aaaaaaaaaaa",
+      "startDate": ""
+   }],
    "name": "BookList"
 }
