@@ -32,3 +32,12 @@ for the books.
 # Phase 4: Task 2
 - Add a book by adding (at least) a book title
 - Remove a book by selecting one in the list
+- Select a book by pressing one in the list
+
+# Phase 4: Task 3
+If I were to improve this project, I would add a few exception classes to handle the different exceptions that
+could arise when running the program. For example, entering random characters as a book rating would not make sense,
+so creating an exception, such as a "RatingException" could help. In addition, using an iterator for the BookList class
+may be a good refactor change. This could simplify the code, since iterating over the book-list is repeated several times.
+Lastly, I would also break down the GUI class into several different classes, perhaps for the buttons and text boxes. Currently,
+the single class is slightly long, so spreading it out in a few classes would enhance readability.
