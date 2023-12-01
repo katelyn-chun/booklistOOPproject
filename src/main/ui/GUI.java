@@ -162,6 +162,7 @@ public class GUI extends JPanel
 
             }
 
+            // EFFECTS: calls the method to print events to the console
             @Override
             public void windowClosing(WindowEvent e) {
                 printLog();
@@ -192,6 +193,7 @@ public class GUI extends JPanel
         };
     }
 
+    // EFFECTS: prints events from the program to console
     private static void printLog() {
         for (Iterator<Event> it = EventLog.getInstance().iterator(); it.hasNext(); ) {
             Event e = it.next();
