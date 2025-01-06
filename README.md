@@ -22,19 +22,14 @@ for the books.
 - I want to be able to add multiple books to a book list
 - I want to be prompted with the option to load data from file when the application starts and prompted with the option to save data to file when the application ends
 
-# Instructions for Grader
+# Instructions
 - You can generate the first required action related to the user story "adding multiple Xs to a Y" by pressing "Add Book" after entering a book title and other book attributes
 - You can generate the second required action related to the user story "adding multiple Xs to a Y" by selecting a book in the list and pressing "Remove Book" to delete a book
 - You can locate my visual component by adding a book, which displays an image
 - You can save the state of my application by pressing "Save Booklist"
 - You can reload the state of my application by pressing "Load Booklist"
 
-# Phase 4: Task 2
-- Add a book by adding (at least) a book title
-- Remove a book by selecting one in the list
-- Select a book by pressing one in the list
-
-# Phase 4: Task 3
+# For Future Reference
 If I were to improve this project, I would add a few exception classes to handle the different exceptions that
 could arise when running the program. For example, entering random characters as a book rating would not make sense,
 so creating an exception, such as a "RatingException" could help. In addition, using an iterator for the BookList class
